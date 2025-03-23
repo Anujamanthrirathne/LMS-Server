@@ -5,7 +5,7 @@ import connectDB from './utils/db';
 import http from "http";
 import { v2 as cloudinary } from 'cloudinary';
 const server = http.createServer(app)
-import cors from 'cors';
+
 // Load environment variables
 dotenv.config();
 
@@ -20,12 +20,7 @@ cloudinary.config({
 // Connect to the database
 connectDB();
 
-app.use(cors({
-  origin: ['https://lms-client-wheat.vercel.app', 'https://*.vercel.app'],
-  credentials: true,
-  methods: "GET,POST,PUT,DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-}));
+
 
 
 // Set the port from environment variables or default to 8000

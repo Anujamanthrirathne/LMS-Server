@@ -43,14 +43,13 @@ app.use(express.json({ limit: '100mb' })); // Adjusted payload size limit
 app.use(cookieParser()); // Parse cookies
 
 // CORS Middleware
-app.use(
-  cors({
-    origin: "https://lms-client-wheat.vercel.app", // Allow your frontend domain
-    credentials: true, // Allow credentials (cookies, authorization headers)
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-  })
-);
+app.use(cors({
+  origin: ['https://lms-client-wheat.vercel.app', 'https://*.vercel.app'],
+  credentials: true,
+  methods: "GET,POST,PUT,DELETE",
+  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+}));
+
 
 // API request limit
 const limiter = rateLimit({

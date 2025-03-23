@@ -17,7 +17,6 @@ const notification_route_1 = __importDefault(require("./routes/notification.rout
 const analytics_route_1 = __importDefault(require("./routes/analytics.route"));
 const layout_route_1 = __importDefault(require("./routes/layout.route"));
 const resource_route_1 = __importDefault(require("./routes/resource.route"));
-const express_rate_limit_1 = require("express-rate-limit");
 dotenv_1.default.config(); // Load environment variables
 exports.app = (0, express_1.default)();
 // Cloudinary Configuration
@@ -41,24 +40,33 @@ exports.app.use((req, res, next) => {
 exports.app.use(express_1.default.urlencoded({ extended: true }));
 exports.app.use(express_1.default.json({ limit: '100mb' })); // Adjusted payload size limit
 exports.app.use((0, cookie_parser_1.default)()); // Parse cookies
-// CORS Middleware
-const corsOptions = {
-    origin: process.env.NODE_ENV === "production"
-        ? "https://lms-client-wheat.vercel.app" // Allow production frontend
-        : "http://localhost:3000", // Allow local development
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-    allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
-    credentials: true, // Allow cookies (if you're using sessions or JWTs)
+exports.app.use((0, cors_1.default)({
+    origin: process.env.ORIGIN,
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+}));
+const corsMiddleware = (req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "https://e-learning-client-two.vercel.app");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    if (req.method === "OPTIONS") {
+        res.sendStatus(200);
+    }
+    else {
+        next();
+    }
 };
-// Apply CORS middleware globally
-exports.app.options('*', (0, cors_1.default)(corsOptions)); // For preflight OPTIONS requests
-// API request limit
-const limiter = (0, express_rate_limit_1.rateLimit)({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-});
+// Use the middleware separately
+exports.app.use(corsMiddleware);
+// api request limit
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max:100,
+//   standardHeaders: 'draft-7',
+//   legacyHeaders:false,
+// })
 // Routes
 exports.app.use('/api/v1', user_route_1.default); // User-related routes
 exports.app.use('/api/v1', course_route_1.default); // Course-related routes
@@ -80,9 +88,10 @@ exports.app.all('*', (req, res, next) => {
     error.statusCode = 404;
     next(error);
 });
+// middleware calls
+// app.use(limiter);
 // Error Middleware
 exports.app.use(error_1.ErrorMiddleware);
-// Final middleware for connection management
 exports.app.use((req, res, next) => {
     res.setHeader("Connection", "keep-alive");
     next();

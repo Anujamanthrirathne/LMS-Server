@@ -43,7 +43,7 @@ exports.app.use(express_1.default.json({ limit: '100mb' })); // Adjusted payload
 exports.app.use((0, cookie_parser_1.default)()); // Parse cookies
 exports.app.use((0, cors_1.default)());
 exports.app.use((0, cors_1.default)({
-    origin: "https://e-learning-client-two.vercel.app",
+    origin: "https://lms-client-wheat.vercel.app",
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"

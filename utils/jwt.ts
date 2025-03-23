@@ -47,9 +47,9 @@ export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   redis.set(user._id as string, JSON.stringify(user));
 
   // only set secure to true in production
-  if (process.env.NODE_ENV === "production") {
-    accessTokenOptions.secure = true;
-  }
+  // if (process.env.NODE_ENV === "production") {
+  //   accessTokenOptions.secure = true;
+  // }
 
   res.cookie("access_token", accessToken, accessTokenOptions);
   res.cookie("refresh_token", refreshToken, refreshTokenOptions);

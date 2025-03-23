@@ -31,9 +31,9 @@ const sendToken = (user, statusCode, res) => {
     // upload session to redis
     redis_1.redis.set(user._id, JSON.stringify(user));
     // only set secure to true in production
-    if (process.env.NODE_ENV === "production") {
-        exports.accessTokenOptions.secure = true;
-    }
+    // if (process.env.NODE_ENV === "production") {
+    //   accessTokenOptions.secure = true;
+    // }
     res.cookie("access_token", accessToken, exports.accessTokenOptions);
     res.cookie("refresh_token", refreshToken, exports.refreshTokenOptions);
     res.status(statusCode).json({

@@ -47,7 +47,7 @@ app.use(cookieParser()); // Parse cookies
 app.use(cors());
  
 app.use(cors({
-  origin: "https://e-learning-client-two.vercel.app",
+  origin: "https://lms-client-wheat.vercel.app",
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"

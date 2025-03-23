@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "target": "ES2020",
+    "module": "CommonJS",
+    "rootDir": "./", // Adjust to match your project structure
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "outDir": "./build",
+    "types": ["node"]
+  },
+  "include": ["app.ts", "server.ts", "@types", "services", "controllers"],
+  "exclude": ["node_modules"]
+}

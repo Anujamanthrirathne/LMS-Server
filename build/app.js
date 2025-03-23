@@ -42,7 +42,7 @@ exports.app.use(express_1.default.urlencoded({ extended: true }));
 exports.app.use(express_1.default.json({ limit: '100mb' })); // Adjusted payload size limit
 exports.app.use((0, cookie_parser_1.default)()); // Parse cookies
 exports.app.use((0, cors_1.default)({
-    origin: ['https://e-learning-client-two.vercel.app'],
+    origin: ['https://localhost:3000'],
     credentials: true, // If you're sending cookies or authorization headers
 }));
 exports.app.options('*', (0, cors_1.default)()); // Enable pre-flight request handling

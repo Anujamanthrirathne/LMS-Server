@@ -2,7 +2,7 @@
   "compilerOptions": {
     "target": "ES2020",
     "module": "CommonJS",
-    "rootDir": "../server", // Adjust to match your project structure
+    "rootDir": "./", // Adjust to match your project structure
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,

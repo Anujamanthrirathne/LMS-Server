@@ -47,7 +47,7 @@ app.use(cookieParser()); // Parse cookies
 
 app.use(
   cors({
-    origin: ['https://e-learning-client-two.vercel.app'],
+    origin: ['https://localhost:3000'],
     credentials: true, // If you're sending cookies or authorization headers
   })
 );

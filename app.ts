@@ -11,9 +11,8 @@ import orderRouter from './routes/order.route';
 import notificationRouter from './routes/notification.route';
 import analyticsRouter from './routes/analytics.route';
 import layoutRouter from './routes/layout.route';
-import resourceRouter from "./routes/resource.route"
 import {rateLimit} from 'express-rate-limit';
-
+import resourceRouter from './routes/resource.route'
 
 dotenv.config(); // Load environment variables
 
@@ -45,31 +44,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '100mb' })); // Adjusted payload size limit
 app.use(cookieParser()); // Parse cookies
 
- 
-app.use(cors({
-  origin: "https://e-learning-client-two.vercel.app",
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-}));
 
+app.use(
+  cors({
+    origin: ['https://e-learning-client-two.vercel.app'],
+    credentials: true, // If you're sending cookies or authorization headers
+  })
+);
 
-
-// const corsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://e-learning-client-two.vercel.app");
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-
-//   if (req.method === "OPTIONS") {
-//     res.sendStatus(200);
-//   } else {
-//     next();
-//   }
-// };
-
-// // Use the middleware separately
-// app.use(corsMiddleware);
+app.options('*', cors()); // Enable pre-flight request handling
 
 // api request limit
 const limiter = rateLimit({
@@ -104,7 +87,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 // middleware calls
-app.use(limiter);
+//app.use(limiter);
 
 // Error Middleware
 app.use(ErrorMiddleware);

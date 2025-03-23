@@ -16,8 +16,8 @@ const order_route_1 = __importDefault(require("./routes/order.route"));
 const notification_route_1 = __importDefault(require("./routes/notification.route"));
 const analytics_route_1 = __importDefault(require("./routes/analytics.route"));
 const layout_route_1 = __importDefault(require("./routes/layout.route"));
-const resource_route_1 = __importDefault(require("./routes/resource.route"));
 const express_rate_limit_1 = require("express-rate-limit");
+const resource_route_1 = __importDefault(require("./routes/resource.route"));
 dotenv_1.default.config(); // Load environment variables
 exports.app = (0, express_1.default)();
 // Cloudinary Configuration
@@ -42,24 +42,10 @@ exports.app.use(express_1.default.urlencoded({ extended: true }));
 exports.app.use(express_1.default.json({ limit: '100mb' })); // Adjusted payload size limit
 exports.app.use((0, cookie_parser_1.default)()); // Parse cookies
 exports.app.use((0, cors_1.default)({
-    origin: "https://e-learning-client-two.vercel.app",
-    credentials: true,
-    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+    origin: ['https://e-learning-client-two.vercel.app'],
+    credentials: true, // If you're sending cookies or authorization headers
 }));
-// const corsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-//   res.setHeader("Access-Control-Allow-Origin", "https://e-learning-client-two.vercel.app");
-//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-//   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-//   if (req.method === "OPTIONS") {
-//     res.sendStatus(200);
-//   } else {
-//     next();
-//   }
-// };
-// // Use the middleware separately
-// app.use(corsMiddleware);
+exports.app.options('*', (0, cors_1.default)()); // Enable pre-flight request handling
 // api request limit
 const limiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000,
@@ -89,7 +75,7 @@ exports.app.all('*', (req, res, next) => {
     next(error);
 });
 // middleware calls
-exports.app.use(limiter);
+//app.use(limiter);
 // Error Middleware
 exports.app.use(error_1.ErrorMiddleware);
 exports.app.use((req, res, next) => {

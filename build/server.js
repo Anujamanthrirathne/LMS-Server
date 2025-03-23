@@ -22,7 +22,7 @@ cloudinary_1.v2.config({
 // Connect to the database
 (0, db_1.default)();
 // Set the port from environment variables or default to 8000
-const PORT = process.env.PORT || 9000;
+const PORT = process.env.PORT || 8000;
 //connect socket server
 (0, socketServer_1.initSocketServer)(server);
 // Start the server

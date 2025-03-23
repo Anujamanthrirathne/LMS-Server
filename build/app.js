@@ -47,20 +47,19 @@ exports.app.use((0, cors_1.default)({
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
     allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
 }));
-const corsMiddleware = (req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://e-learning-client-two.vercel.app");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    if (req.method === "OPTIONS") {
-        res.sendStatus(200);
-    }
-    else {
-        next();
-    }
-};
-// Use the middleware separately
-exports.app.use(corsMiddleware);
+// const corsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
+//   res.setHeader("Access-Control-Allow-Origin", "https://e-learning-client-two.vercel.app");
+//   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+//   res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   if (req.method === "OPTIONS") {
+//     res.sendStatus(200);
+//   } else {
+//     next();
+//   }
+// };
+// // Use the middleware separately
+// app.use(corsMiddleware);
 // api request limit
 const limiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000,

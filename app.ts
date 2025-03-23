@@ -43,22 +43,17 @@ app.use(express.json({ limit: '100mb' })); // Adjusted payload size limit
 app.use(cookieParser()); // Parse cookies
 
 // CORS Middleware
-app.use((req: Request, res: Response, next: NextFunction): void => {
-  res.header("Access-Control-Allow-Origin", process.env.NODE_ENV === "production"
-    ? "https://lms-client-wheat.vercel.app"
-    : "http://localhost:3000"
-  );  
-  res.header("Access-Control-Allow-Credentials", "true");
-  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+const corsOptions = {
+  origin: process.env.NODE_ENV === "production"
+    ? "https://lms-client-wheat.vercel.app"  // Allow production frontend
+    : "http://localhost:3000",               // Allow local development
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Origin", "X-Requested-With", "Content-Type", "Accept", "Authorization"],
+  credentials: true, // Allow cookies (if you're using sessions or JWTs)
+};
 
-  // ✅ Explicitly handle OPTIONS requests **before** calling next()
-  if (req.method === "OPTIONS") {
-    return ;
-  }
-
-  next();
-});
+// Apply CORS middleware globally
+app.use(cors(corsOptions));
 
 
 

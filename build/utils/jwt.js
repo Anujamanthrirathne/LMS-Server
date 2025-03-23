@@ -11,19 +11,20 @@ const redis_1 = require("./redis");
 const accessTokenExpire = parseInt(process.env.ACCESS_TOKEN_EXPIRE || "300", 10);
 const refreshTokenExpire = parseInt(process.env.REFRESH_TOKEN_EXPIRE || "1200", 10);
 //options for cookies
+// Modify the accessTokenOptions and refreshTokenOptions for cookies:
 exports.accessTokenOptions = {
     expires: new Date(Date.now() + accessTokenExpire * 60 * 60 * 1000),
     maxAge: accessTokenExpire * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "none",
-    secure: true,
+    sameSite: "none", // required for cross-site cookies
+    secure: process.env.NODE_ENV === "production", // ensure secure cookies in production
 };
 exports.refreshTokenOptions = {
     expires: new Date(Date.now() + refreshTokenExpire * 24 * 60 * 60 * 1000),
     maxAge: accessTokenExpire * 24 * 60 * 60 * 1000,
     httpOnly: true,
-    sameSite: "none",
-    secure: true,
+    sameSite: "none", // required for cross-site cookies
+    secure: process.env.NODE_ENV === "production", // ensure secure cookies in production
 };
 const sendToken = (user, statusCode, res) => {
     const accessToken = user.SignAccessToken();

@@ -23,20 +23,21 @@ const refreshTokenExpire = parseInt(
 );
 
 //options for cookies
+// Modify the accessTokenOptions and refreshTokenOptions for cookies:
 export const accessTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + accessTokenExpire * 60 * 60 * 1000),
   maxAge: accessTokenExpire * 60 * 60 * 1000,
   httpOnly: true,
-  sameSite: "none",
-  secure:true,
+  sameSite: "none", // required for cross-site cookies
+  secure: process.env.NODE_ENV === "production", // ensure secure cookies in production
 };
 
 export const refreshTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + refreshTokenExpire * 24 * 60 * 60 * 1000),
   maxAge: accessTokenExpire * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  sameSite: "none",
-  secure:true,
+  sameSite: "none", // required for cross-site cookies
+  secure: process.env.NODE_ENV === "production", // ensure secure cookies in production
 };
 
 export const sendToken = (user: IUser, statusCode: number, res: Response) => {

@@ -10,7 +10,6 @@ const db_1 = __importDefault(require("./utils/db"));
 const http_1 = __importDefault(require("http"));
 const cloudinary_1 = require("cloudinary");
 const server = http_1.default.createServer(app_1.app);
-const cors_1 = __importDefault(require("cors"));
 // Load environment variables
 dotenv_1.default.config();
 // Cloudinary configuration
@@ -22,12 +21,6 @@ cloudinary_1.v2.config({
 });
 // Connect to the database
 (0, db_1.default)();
-app_1.app.use((0, cors_1.default)({
-    origin: ['https://lms-client-wheat.vercel.app', 'https://*.vercel.app'],
-    credentials: true,
-    methods: "GET,POST,PUT,DELETE",
-    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
-}));
 // Set the port from environment variables or default to 8000
 const PORT = process.env.PORT || 8000;
 //connect socket server

@@ -11,7 +11,7 @@ import orderRouter from './routes/order.route';
 import notificationRouter from './routes/notification.route';
 import analyticsRouter from './routes/analytics.route';
 import layoutRouter from './routes/layout.route';
-import resourceRouter from "./routes/resource.route"
+// import resourceRouter from "./routes/resource.route"
 import {rateLimit} from 'express-rate-limit';
 
 
@@ -87,7 +87,7 @@ app.use('/api/v1', orderRouter);
 app.use('/api/v1', notificationRouter);
 app.use('/api/v1',analyticsRouter);
 app.use('/api/v1',layoutRouter);
-app.use('/api/v1',resourceRouter)
+// app.use('/api/v1',resourceRouter)
 // Test Route
 app.get('/test', (req: Request, res: Response) => {
   res.status(200).json({

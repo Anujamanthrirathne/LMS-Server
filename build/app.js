@@ -43,9 +43,11 @@ exports.app.use(express_1.default.json({ limit: '100mb' })); // Adjusted payload
 exports.app.use((0, cookie_parser_1.default)()); // Parse cookies
 // CORS Middleware
 exports.app.use((0, cors_1.default)({
-    origin: ['https://lms-client-wheat.vercel.app', 'https://*.vercel.app'],
+    origin: process.env.NODE_ENV === 'production'
+        ? ['https://lms-client-wheat.vercel.app'] // Production frontend
+        : ['http://localhost:3000'], // Development frontend
     credentials: true,
-    methods: "GET,POST,PUT,DELETE",
+    methods: "GET, POST, PUT, DELETE",
     allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization",
 }));
 // API request limit

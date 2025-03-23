@@ -44,7 +44,7 @@ app.use((req, res, next) => {
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '100mb' })); // Adjusted payload size limit
 app.use(cookieParser()); // Parse cookies
-
+app.use(cors());
  
 app.use(cors({
   origin: "https://e-learning-client-two.vercel.app",
@@ -104,7 +104,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 // middleware calls
-app.use(limiter);
+// app.use(limiter);
 
 // Error Middleware
 app.use(ErrorMiddleware);

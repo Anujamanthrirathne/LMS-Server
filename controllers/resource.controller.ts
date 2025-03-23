@@ -8,13 +8,7 @@ import PDFParser from "pdf-parse";  // Import pdf-parse for PDF processing
 
 
 // Setup multer to handle file uploads
-const storage = multer.memoryStorage(); // Use memory storage for file buffers
-const upload = multer({ storage }).fields([
-  { name: 'pdfFile', maxCount: 1 }, // Allow 1 PDF file
-  { name: 'thumbnailFile', maxCount: 1 }, // Allow 1 Thumbnail file
-]);
-
-// Function to count word occurrences in a PDF
+// Function to count word occurrences in PDF text
 const countWordOccurrences = (pdfText: string, searchWords: string[]): object => {
   let wordCounts: { [key: string]: number } = {};
   searchWords.forEach((word) => {
@@ -25,32 +19,33 @@ const countWordOccurrences = (pdfText: string, searchWords: string[]): object =>
   return wordCounts;
 };
 
-interface CustomRequest extends Request {
-  files: {
-    pdfFile: Express.Multer.File[]; // Array of files for the 'pdfFile' field
-    thumbnailFile: Express.Multer.File[]; // Array of files for the 'thumbnailFile' field
-  };
-}
+// Setup multer to handle in-memory file uploads
+const storage = multer.memoryStorage();
+const upload = multer({ storage }).fields([
+  { name: 'pdfFile', maxCount: 1 },  // 1 PDF file
+  { name: 'thumbnailFile', maxCount: 1 },  // 1 Thumbnail image
+]);
 
 // ✅ Create Resource (Uploads PDF & Thumbnail to Cloudinary)
 export const createResource = async (req: Request, res: Response): Promise<void> => {
-  const customReq = req as CustomRequest;
+  const customReq = req as any;  // customRequest type for multer file handling
 
+  // Handle file uploads with multer
   upload(customReq, res, async (err: any) => {
     if (err) {
       return res.status(400).json({ message: "File upload error", error: err });
     }
 
     try {
-      const { name, title, description, category,links } = customReq.body;
-      const pdfFile = customReq.files['pdfFile']?.[0]; // Safely access the PDF file
-      const thumbnailFile = customReq.files['thumbnailFile']?.[0]; // Safely access the Thumbnail file
+      const { name, title, description, category, links } = customReq.body;
+      const pdfFile = customReq.files['pdfFile']?.[0];  // Get the PDF file
+      const thumbnailFile = customReq.files['thumbnailFile']?.[0];  // Get the Thumbnail file
 
       if (!pdfFile || !thumbnailFile) {
         return res.status(400).json({ message: "PDF and Thumbnail files are required" });
       }
 
-      // Parse PDF file to count word occurrences
+      // Parse the PDF to get text and count word occurrences
       const pdfBuffer = pdfFile.buffer;
       const data = await PDFParser(pdfBuffer);
       const pdfText = data.text;
@@ -58,7 +53,7 @@ export const createResource = async (req: Request, res: Response): Promise<void>
       const technologies = ['Node.js', 'React.js', 'JavaScript'];  // Example tech terms
       const wordCounts = countWordOccurrences(pdfText, technologies);
 
-      // Upload PDF to Cloudinary using the stream
+      // Upload PDF to Cloudinary
       const pdfUpload = cloudinary.uploader.upload_stream({
         resource_type: "raw",  // For non-image files like PDFs
         folder: "resources/pdfs",
@@ -67,7 +62,7 @@ export const createResource = async (req: Request, res: Response): Promise<void>
           return res.status(500).json({ message: "Error uploading PDF", error });
         }
 
-        // Upload Thumbnail to Cloudinary using the stream
+        // Upload Thumbnail to Cloudinary
         const thumbnailUpload = cloudinary.uploader.upload_stream({
           resource_type: "image",  // For image files
           folder: "resources/thumbnails",
@@ -76,29 +71,29 @@ export const createResource = async (req: Request, res: Response): Promise<void>
             return res.status(500).json({ message: "Error uploading Thumbnail", error: thumbnailError });
           }
 
-          // Save Resource in DB after both uploads are successful
+          // Save resource metadata to DB after successful uploads
           const newResource = new Resource({
             name,
             title,
-            description, 
+            description,
             links,
-            pdfUrl: result?.secure_url, // PDF URL
-            thumbnailUrl: thumbnailResult?.secure_url, // Thumbnail URL
+            pdfUrl: result?.secure_url,  // URL for the PDF
+            thumbnailUrl: thumbnailResult?.secure_url,  // URL for the Thumbnail
             category,
             downloadedCount: 0,
-            wordCounts,  // Store word counts in DB
+            wordCounts,  // Store word counts in the DB
           });
 
           await newResource.save();
           res.status(201).json(newResource);
         });
 
-        // Pipe the thumbnail stream
+        // Pipe the thumbnail stream to Cloudinary
         const thumbnailStream = streamifier.createReadStream(thumbnailFile.buffer);
         thumbnailStream.pipe(thumbnailUpload);
       });
 
-      // Pipe the PDF stream
+      // Pipe the PDF stream to Cloudinary
       const pdfStream = streamifier.createReadStream(pdfFile.buffer);
       pdfStream.pipe(pdfUpload);
 

@@ -16,7 +16,7 @@ const order_route_1 = __importDefault(require("./routes/order.route"));
 const notification_route_1 = __importDefault(require("./routes/notification.route"));
 const analytics_route_1 = __importDefault(require("./routes/analytics.route"));
 const layout_route_1 = __importDefault(require("./routes/layout.route"));
-// import resourceRouter from "./routes/resource.route"
+const resource_route_1 = __importDefault(require("./routes/resource.route"));
 const express_rate_limit_1 = require("express-rate-limit");
 dotenv_1.default.config(); // Load environment variables
 exports.app = (0, express_1.default)();
@@ -76,7 +76,7 @@ exports.app.use('/api/v1', order_route_1.default);
 exports.app.use('/api/v1', notification_route_1.default);
 exports.app.use('/api/v1', analytics_route_1.default);
 exports.app.use('/api/v1', layout_route_1.default);
-// app.use('/api/v1',resourceRouter)
+exports.app.use('/api/v1', resource_route_1.default);
 // Test Route
 exports.app.get('/test', (req, res) => {
     res.status(200).json({

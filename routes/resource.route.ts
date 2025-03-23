@@ -10,10 +10,9 @@ import {
 import { updateAccessToken } from "./../controllers/user.controller";
 import { isAuthenticated, authorizeRoles } from "./../middleware/auth";
 import express from "express";
-import multer from 'multer';
+
 const resourceRouter = express.Router();
 
-const upload = multer({ dest: 'uploads/' });
 
 resourceRouter.post(
   "/create-resource",

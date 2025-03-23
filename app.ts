@@ -53,7 +53,8 @@ const corsOptions = {
 };
 
 // Apply CORS middleware globally
-app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // For preflight OPTIONS requests
+
 
 
 

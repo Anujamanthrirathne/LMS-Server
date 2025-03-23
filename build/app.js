@@ -51,7 +51,7 @@ const corsOptions = {
     credentials: true, // Allow cookies (if you're using sessions or JWTs)
 };
 // Apply CORS middleware globally
-exports.app.use((0, cors_1.default)(corsOptions));
+exports.app.options('*', (0, cors_1.default)(corsOptions)); // For preflight OPTIONS requests
 // API request limit
 const limiter = (0, express_rate_limit_1.rateLimit)({
     windowMs: 15 * 60 * 1000,

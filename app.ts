@@ -39,7 +39,7 @@ app.use((req, res, next) => {
   next();
 });
 
-
+ 
 // Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json({ limit: '100mb' })); // Adjusted payload size limit
@@ -47,7 +47,7 @@ app.use(cookieParser()); // Parse cookies
 
  
 app.use(cors({
-  origin: process.env.ORIGIN,
+  origin: 'http://localhost:3000',
   credentials: true,
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
@@ -55,29 +55,18 @@ app.use(cors({
 
 
 
-const corsMiddleware = (req: Request, res: Response, next: NextFunction): void => {
-  res.setHeader("Access-Control-Allow-Origin", "https://e-learning-client-two.vercel.app");
-  res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
-  res.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
 
-  if (req.method === "OPTIONS") {
-    res.sendStatus(200);
-  } else {
-    next();
-  }
-};
 
-// Use the middleware separately
-app.use(corsMiddleware);
+
+
 
 // api request limit
-// const limiter = rateLimit({
-//   windowMs: 15 * 60 * 1000,
-//   max:100,
-//   standardHeaders: 'draft-7',
-//   legacyHeaders:false,
-// })
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max:100,
+  standardHeaders: 'draft-7',
+  legacyHeaders:false,
+})
 
 
 // Routes
@@ -104,7 +93,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 // middleware calls
-// app.use(limiter);
+ app.use(limiter);
 
 // Error Middleware
 app.use(ErrorMiddleware);

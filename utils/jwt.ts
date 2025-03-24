@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { Response } from "express";
 import { redis } from "./redis";
-
+ 
 interface ITokenOptions {
   expires: Date;
   maxAge: number;
@@ -23,21 +23,20 @@ const refreshTokenExpire = parseInt(
 );
 
 //options for cookies
-// Modify the accessTokenOptions and refreshTokenOptions for cookies:
 export const accessTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + accessTokenExpire * 60 * 60 * 1000),
   maxAge: accessTokenExpire * 60 * 60 * 1000,
   httpOnly: true,
-  sameSite: "none", // required for cross-site cookies
-  secure: process.env.NODE_ENV === "production", // ensure secure cookies in production
+  sameSite: "none",
+  secure:true,
 };
 
 export const refreshTokenOptions: ITokenOptions = {
   expires: new Date(Date.now() + refreshTokenExpire * 24 * 60 * 60 * 1000),
   maxAge: accessTokenExpire * 24 * 60 * 60 * 1000,
   httpOnly: true,
-  sameSite: "none", // required for cross-site cookies
-  secure: process.env.NODE_ENV === "production", // ensure secure cookies in production
+  sameSite: "none",
+  secure:true,
 };
 
 export const sendToken = (user: IUser, statusCode: number, res: Response) => {
@@ -48,9 +47,9 @@ export const sendToken = (user: IUser, statusCode: number, res: Response) => {
   redis.set(user._id as string, JSON.stringify(user));
 
   // only set secure to true in production
-  // if (process.env.NODE_ENV === "production") {
-  //   accessTokenOptions.secure = true;
-  // }
+  if (process.env.NODE_ENV === "production") {
+    accessTokenOptions.secure = true;
+  }
 
   res.cookie("access_token", accessToken, accessTokenOptions);
   res.cookie("refresh_token", refreshToken, refreshTokenOptions);

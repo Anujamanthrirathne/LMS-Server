@@ -34,7 +34,7 @@ app.use(cors({
 const PORT = process.env.PORT || 8000;
 
 //connect socket server
-initSocketServer(server);
+// initSocketServer(server);
 
 // Start the server
 server.listen(PORT, () => {

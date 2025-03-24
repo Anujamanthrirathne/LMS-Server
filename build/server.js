@@ -3,7 +3,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const socketServer_1 = require("./socketServer");
 const dotenv_1 = __importDefault(require("dotenv"));
 const app_1 = require("./app");
 const db_1 = __importDefault(require("./utils/db"));
@@ -32,7 +31,7 @@ app_1.app.use((0, cors_1.default)({
 // Set the port from environment variables or default to 8000
 const PORT = process.env.PORT || 8000;
 //connect socket server
-(0, socketServer_1.initSocketServer)(server);
+// initSocketServer(server);
 // Start the server
 server.listen(PORT, () => {
     console.log(`Server is connected to port ${PORT}`);

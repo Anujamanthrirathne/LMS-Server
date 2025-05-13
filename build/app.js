@@ -5,6 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.app = void 0;
 const express_1 = __importDefault(require("express"));
+const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const error_1 = require("./middleware/error"); // Custom error middleware
@@ -16,7 +17,6 @@ const notification_route_1 = __importDefault(require("./routes/notification.rout
 const analytics_route_1 = __importDefault(require("./routes/analytics.route"));
 const layout_route_1 = __importDefault(require("./routes/layout.route"));
 const resource_route_1 = __importDefault(require("./routes/resource.route"));
-const express_rate_limit_1 = require("express-rate-limit");
 dotenv_1.default.config(); // Load environment variables
 exports.app = (0, express_1.default)();
 // Cloudinary Configuration
@@ -40,19 +40,19 @@ exports.app.use((req, res, next) => {
 exports.app.use(express_1.default.urlencoded({ extended: true }));
 exports.app.use(express_1.default.json({ limit: '100mb' })); // Adjusted payload size limit
 exports.app.use((0, cookie_parser_1.default)()); // Parse cookies
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   credentials: true,
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-// }));
+exports.app.use((0, cors_1.default)({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+    allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+}));
 // api request limit
-const limiter = (0, express_rate_limit_1.rateLimit)({
-    windowMs: 15 * 60 * 1000,
-    max: 100,
-    standardHeaders: 'draft-7',
-    legacyHeaders: false,
-});
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max:100,
+//   standardHeaders: 'draft-7',
+//   legacyHeaders:false,
+// })
 // Routes
 exports.app.use('/api/v1', user_route_1.default); // User-related routes
 exports.app.use('/api/v1', course_route_1.default); // Course-related routes
@@ -75,7 +75,7 @@ exports.app.all('*', (req, res, next) => {
     next(error);
 });
 // middleware calls
-exports.app.use(limiter);
+//  app.use(limiter);
 // Error Middleware
 exports.app.use(error_1.ErrorMiddleware);
 exports.app.use((req, res, next) => {

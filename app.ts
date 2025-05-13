@@ -46,12 +46,12 @@ app.use(express.json({ limit: '100mb' })); // Adjusted payload size limit
 app.use(cookieParser()); // Parse cookies
 
  
-// app.use(cors({
-//   origin: 'http://localhost:3000',
-//   credentials: true,
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-// }));
+ app.use(cors({
+   origin: 'http://localhost:3000',
+   credentials: true,
+   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+ }));
 
 
 
@@ -61,12 +61,12 @@ app.use(cookieParser()); // Parse cookies
 
 
 // api request limit
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max:100,
-  standardHeaders: 'draft-7',
-  legacyHeaders:false,
-})
+// const limiter = rateLimit({
+//   windowMs: 15 * 60 * 1000,
+//   max:100,
+//   standardHeaders: 'draft-7',
+//   legacyHeaders:false,
+// })
 
 
 // Routes
@@ -93,7 +93,7 @@ app.all('*', (req: Request, res: Response, next: NextFunction) => {
 });
 
 // middleware calls
- app.use(limiter);
+//  app.use(limiter);
 
 // Error Middleware
 app.use(ErrorMiddleware);

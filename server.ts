@@ -21,12 +21,12 @@ cloudinary.config({
 connectDB();
 
 // ✅ Apply CORS before creating the server
-app.use(cors({
-  origin: "https://lms-client-wheat.vercel.app",
-  credentials: true,
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
-}));
+// app.use(cors({
+//   origin: "https://lms-client-wheat.vercel.app",
+//   credentials: true,
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   allowedHeaders: "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+// }));
 
 // Create HTTP server **after** middleware setup
 const server = http.createServer(app);
